@@ -9,7 +9,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete {
+class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
+    ParseJsonData.OnDataAvailable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate called")
@@ -17,15 +18,14 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
         val url =
             "https://www.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1"
         val getRawData = GetRawData(this)
-//        getRawData.setDownloadCompleteListener(this)
-        getRawData.execute(url)
+//        getRawData.execute(url)
+        getRawData.execute("bogus data")
+
+        Log.d(TAG, "onCreate done")
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,10 +50,23 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete {
     override fun onDownloadComplete(data: String, status: DownloadStatus) {
         if (status == DownloadStatus.OK) {
             Log.d(TAG, "onDownloadComplete: Data is gathered")
+
+            val parseJsonData = ParseJsonData(this)
+            parseJsonData.execute(data)
         } else {
             //download failed
             Log.d(TAG, "onDownloadComplete: Data download failed -> $data")
         }
     }
+
+    override fun onDataAvailable(data: List<Photo>) {
+        Log.d(TAG, "onDataAvailable: parsed data -> $data")
+        Log.d(TAG, "onDataAvailable done")
+    }
+
+    override fun onError(e: Exception) {
+        Log.d(TAG, "onError called with ${e.message}")
+    }
+
 
 }

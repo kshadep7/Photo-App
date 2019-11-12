@@ -26,6 +26,7 @@ class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, V
 //    }
 
     override fun doInBackground(vararg params: String?): String {
+        Log.d(TAG, "doInBackground called")
         if (params[0] == null) {
             downloadStatus = DownloadStatus.NOT_INITIALIZED
             return "URL is null"
@@ -33,6 +34,7 @@ class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, V
 
         try {
             downloadStatus = DownloadStatus.OK
+            Log.d(TAG, "doInBackground ends")
             return URL(params[0]).readText()
 
         } catch (e: Exception) {
@@ -55,15 +57,17 @@ class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, V
                 }
             }
             Log.e(TAG, errorMsg)
-
+            cancel(true)
+            Log.d(TAG, "doInBackground ends")
             return errorMsg
         }
+
     }
 
     override fun onPostExecute(result: String) {
 //        super.onPostExecute(result)
 
-        Log.d(TAG, "onPostExecute: Data : $result")
+        Log.d(TAG, "onPostExecute called")
         listener.onDownloadComplete(result, downloadStatus)
     }
 }

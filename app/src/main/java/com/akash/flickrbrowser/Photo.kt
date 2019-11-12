@@ -9,6 +9,11 @@ class Photo(
     private val tags: String
 ) {
     override fun toString(): String {
-        return "Photo(title='$title', link='$link', image='$image', author='$author', authorId='$authorId', tags='$tags')"
+        return "Photo(title='$title', " +
+                "link='$link', " +
+                "image='$image', " +
+                "author='$author', " +
+                "authorId='$authorId', " +
+                "tags='$tags')"
     }
 }
