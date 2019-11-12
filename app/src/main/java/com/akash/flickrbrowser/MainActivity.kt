@@ -1,11 +1,14 @@
 package com.akash.flickrbrowser
 
+import android.location.Criteria
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.net.URI
 
 private const val TAG = "MainActivity"
 
@@ -19,13 +22,32 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         setSupportActionBar(toolbar)
 
         val url =
-            "https://www.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1"
+            createUri(
+                "https://www.flickr.com/services/feeds/photos_public.gne",
+                "android,oreo",
+                "en-us",
+                true
+            )
         val getRawData = GetRawData(this)
-//        getRawData.execute(url)
-        getRawData.execute("bogus data")
-
+        getRawData.execute(url)
         Log.d(TAG, "onCreate done")
 
+    }
+
+    private fun createUri(
+        baseURL: String,
+        searchCriteria: String,
+        lang: String,
+        matchAll: Boolean
+    ): String {
+        return Uri.parse(baseURL)
+            .buildUpon()
+            .appendQueryParameter("tags", searchCriteria)
+            .appendQueryParameter("lang", lang)
+            .appendQueryParameter("tagmode", if (matchAll) "ALL" else "ANY")
+            .appendQueryParameter("nojsoncallback", "1")
+            .appendQueryParameter("format", "json")
+            .build().toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
