@@ -1,12 +1,12 @@
 package com.akash.flickrbrowser
 
 class Photo(
-    private val title: String,
-    private val link: String,
-    private val image: String,
-    private val author: String,
-    private val authorId: String,
-    private val tags: String
+    val title: String,
+    val link: String,
+    val image: String,
+    val author: String,
+    val authorId: String,
+    val tags: String
 ) {
     override fun toString(): String {
         return "Photo(title='$title', " +

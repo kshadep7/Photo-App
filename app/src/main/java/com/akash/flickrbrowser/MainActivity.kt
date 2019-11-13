@@ -1,25 +1,30 @@
 package com.akash.flickrbrowser
 
-import android.location.Criteria
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import java.net.URI
+import kotlinx.android.synthetic.main.content_main.*
 
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
     ParseJsonData.OnDataAvailable {
 
+    private val recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate called")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.adapter = recyclerViewAdapter
 
         val url =
             createUri(
@@ -82,7 +87,8 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
     }
 
     override fun onDataAvailable(data: List<Photo>) {
-        Log.d(TAG, "onDataAvailable: parsed data -> $data")
+        Log.d(TAG, "onDataAvailable: parsed data")
+        recyclerViewAdapter.loadNewData(data)
         Log.d(TAG, "onDataAvailable done")
     }
 
