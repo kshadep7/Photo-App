@@ -1,6 +1,5 @@
 package com.akash.flickrbrowser
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,21 +19,21 @@ class RecyclerViewAdapter(private var photoList: List<Photo>) :
     RecyclerView.Adapter<CustomViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        Log.d(TAG, "onCreateViewHolder: new view requested")
+//        Log.d(TAG, "onCreateViewHolder: new view requested")
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.photo_object_view, parent, false)
         return CustomViewHolder(view)
     }
 
     override fun getItemCount(): Int {
-        Log.d(TAG, "getItemCount called")
+//        Log.d(TAG, "getItemCount called")
         return if (photoList.isNotEmpty()) photoList.size else 0
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
 
         val photoItem = photoList[position]
-        Log.d(TAG, "onBindViewHolder: ${photoItem.title} --> $position")
+//        Log.d(TAG, "onBindViewHolder: ${photoItem.title} --> $position")
         Picasso.get()
             .load(photoItem.image)
             .placeholder(R.drawable.placeholder)

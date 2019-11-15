@@ -3,9 +3,10 @@ package com.akash.flickrbrowser
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -14,7 +15,7 @@ import kotlinx.android.synthetic.main.content_main.*
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
-    ParseJsonData.OnDataAvailable {
+    ParseJsonData.OnDataAvailable, RecyclerViewItemClickListener.OnRecyclerItemClickListener {
 
     private val recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +25,13 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         setSupportActionBar(toolbar)
 
         recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.addOnItemTouchListener(
+            RecyclerViewItemClickListener(
+                this,
+                recycler_view,
+                this
+            )
+        )
         recycler_view.adapter = recyclerViewAdapter
 
         val url =
@@ -37,6 +45,16 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         getRawData.execute(url)
         Log.d(TAG, "onCreate done")
 
+    }
+
+    override fun itemClick(view: View, position: Int) {
+        Log.d(TAG, "itemClicked called with view $view and position $position")
+        Toast.makeText(this, "Clicked Position $position", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun itemLongPress(view: View, position: Int) {
+        Log.d(TAG, "itemLongPress called with view $view and position $position")
+        Toast.makeText(this, "LongPress Position $position", Toast.LENGTH_SHORT).show()
     }
 
     private fun createUri(
