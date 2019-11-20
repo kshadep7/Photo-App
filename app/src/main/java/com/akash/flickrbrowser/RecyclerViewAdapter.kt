@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
 class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val imageView: ImageView = view.findViewById(R.id.image)
+    val imageView: ImageView = view.findViewById(R.id.thumbnail)
     val title: TextView = view.findViewById(R.id.title)
 }
 

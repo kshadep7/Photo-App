@@ -1,19 +1,20 @@
 package com.akash.flickrbrowser
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
+import android.view.Menu
 
-import kotlinx.android.synthetic.main.activity_search.*
-
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        setSupportActionBar(toolbar)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activateToolbar(true)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        return true
+//        return super.onCreateOptionsMenu(menu)
+
+    }
 }

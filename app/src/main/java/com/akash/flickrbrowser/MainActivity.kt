@@ -1,5 +1,6 @@
 package com.akash.flickrbrowser
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -7,14 +8,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
+class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
     ParseJsonData.OnDataAvailable, RecyclerViewItemClickListener.OnRecyclerItemClickListener {
 
     private val recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         Log.d(TAG, "onCreate called")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        activateToolbar(false)
 
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.addOnItemTouchListener(
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         val url =
             createUri(
                 "https://www.flickr.com/services/feeds/photos_public.gne",
-                "android,oreo",
+                "",
                 "en-us",
                 true
             )
@@ -47,13 +46,19 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
 
     }
 
-    override fun itemClick(view: View, position: Int) {
+    override fun onItemClick(view: View, position: Int) {
         Log.d(TAG, "itemClicked called with view $view and position $position")
         Toast.makeText(this, "Clicked Position $position", Toast.LENGTH_SHORT).show()
+        val photo = recyclerViewAdapter.getPhoto(position)
+        if (photo != null) {
+            val intent = Intent(this, PhotoDetailActivity::class.java)
+            intent.putExtra(PHOTO_TRANSFER, photo)
+            startActivity(intent)
+        }
     }
 
-    override fun itemLongPress(view: View, position: Int) {
-        Log.d(TAG, "itemLongPress called with view $view and position $position")
+    override fun onItemLongPress(view: View, position: Int) {
+        Log.d(TAG, "onItemLongPress called with position $position")
         Toast.makeText(this, "LongPress Position $position", Toast.LENGTH_SHORT).show()
     }
 
@@ -87,7 +92,10 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.search -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
