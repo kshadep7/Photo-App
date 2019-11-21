@@ -18,6 +18,7 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
     ParseJsonData.OnDataAvailable, RecyclerViewItemClickListener.OnRecyclerItemClickListener {
 
     private val recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate called")
         super.onCreate(savedInstanceState)
@@ -33,15 +34,15 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
             )
         )
         recycler_view.adapter = recyclerViewAdapter
-        val url =
-            createUri(
-                "https://www.flickr.com/services/feeds/photos_public.gne",
-                "",
-                "en-us",
-                true
-            )
-        val getRawData = GetRawData(this)
-        getRawData.execute(url)
+//        val url =
+//            createUri(
+//                "https://www.flickr.com/services/feeds/photos_public.gne",
+//                "",
+//                "en-us",
+//                true
+//            )
+//        val getRawData = GetRawData(this)
+//        getRawData.execute(url)
 
 
         Log.d(TAG, "onCreate done")
@@ -116,7 +117,11 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
 
     override fun onDataAvailable(data: List<Photo>) {
         Log.d(TAG, "onDataAvailable: parsed data")
-        recyclerViewAdapter.loadNewData(data)
+        if(data.isNotEmpty()){
+            recyclerViewAdapter.loadNewData(data)
+        }else{
+            Toast.makeText(this, "No entries found!!", Toast.LENGTH_SHORT).show()
+        }
         Log.d(TAG, "onDataAvailable done")
     }
 

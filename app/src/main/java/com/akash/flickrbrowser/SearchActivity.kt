@@ -12,7 +12,7 @@ private const val SEARCH_QUERY ="SEARCH_QUERY"
 
 class SearchActivity : BaseActivity() {
 
-    private var searchView: android.widget.SearchView? = null
+    private var searchView: SearchView? = null
     private val context: Context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class SearchActivity : BaseActivity() {
         menuInflater.inflate(R.menu.menu_search, menu)
 
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView = menu.findItem(R.id.app_bar_search).actionView as android.widget.SearchView
+        searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         searchView?.setSearchableInfo(searchableInfo)
         searchView?.isIconified = false
@@ -46,6 +46,11 @@ class SearchActivity : BaseActivity() {
                 return true
             }
         })
+
+        searchView?.setOnCloseListener {
+            finish()
+            false
+        }
         return true
 //        return super.onCreateOptionsMenu(menu)
 
